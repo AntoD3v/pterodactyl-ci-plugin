@@ -5,7 +5,7 @@ import org.gradle.api.tasks.options.Option
 import java.io.File
 import kotlin.jvm.optionals.getOrNull
 
-class DeployTask : AbstractTask() {
+open class DeployTask : AbstractTask() {
 
     @Option(option = "buildPath", description = "Path to the Minecraft server build")
     private var buildPath: String? = null

@@ -4,7 +4,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import java.util.function.Consumer
 
-class ExecTask : AbstractTask() {
+open class ExecTask : AbstractTask() {
 
     @Option(option = "commands", description = "Commands to execute")
     private var commands: List<String> = ArrayList()
