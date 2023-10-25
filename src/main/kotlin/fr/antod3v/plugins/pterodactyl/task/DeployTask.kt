@@ -1,6 +1,7 @@
 package fr.antod3v.plugins.pterodactyl.task
 
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import java.io.File
@@ -13,10 +14,12 @@ open class DeployTask : AbstractTask() {
     var buildPath: String? = null
 
     @Input
+    @Optional
     @Option(option = "targetDir", description = "Directory to the pterodactyl server")
     var targetDir: String? = "plugins"
 
     @Input
+    @Optional
     @Option(option = "targetName", description = "Remote name of the build")
     var targetName: String? = null
 
