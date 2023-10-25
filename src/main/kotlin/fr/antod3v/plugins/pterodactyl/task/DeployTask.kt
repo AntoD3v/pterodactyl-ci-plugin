@@ -14,7 +14,7 @@ open class DeployTask : AbstractTask() {
 
     @Input
     @Option(option = "targetDir", description = "Directory to the pterodactyl server")
-    var targetDir = "plugins"
+    var targetDir: String? = "plugins"
 
     @Input
     @Option(option = "targetName", description = "Remote name of the build")

@@ -14,15 +14,15 @@ abstract class AbstractTask : DefaultTask() {
 
     @Input
     @Option(option = "serverId", description = "Id of the server (8 first characters of uuid)")
-    protected var serverId = extension.serverId
+    var serverId: String? = extension.serverId
 
     @Input
     @Option(option = "apiUrl", description = "Url of the pterodactyl api")
-    protected var apiUrl = extension.apiUrl
+    var apiUrl: String? = extension.apiUrl
 
     @Input
     @Option(option = "apiKey", description = "Key of the pterodactyl api")
-    protected var apiKey = extension.apiKey
+    var apiKey: String? = extension.apiKey
 
     init {
         group = "pterodactyl"
