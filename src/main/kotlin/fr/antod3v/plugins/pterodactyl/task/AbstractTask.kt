@@ -10,7 +10,7 @@ import org.gradle.api.tasks.options.Option
 
 abstract class AbstractTask : DefaultTask() {
 
-    private val extension = project.extensions.findByName("pterodactyl") as Credential
+    private val extension: Credential = project.extensions.create("pterodactyl", Credential::class.java)
 
     @Input
     @Optional

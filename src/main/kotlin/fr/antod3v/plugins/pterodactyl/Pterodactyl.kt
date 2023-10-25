@@ -10,7 +10,7 @@ class Pterodactyl : Plugin<Project> {
 
     override fun apply(project: Project) {
 
-        project.extensions.create("pterodactyl", Credential::class.java)
+//        project.extensions.create("pterodactyl", Credential::class.java)
 
         project.tasks.create("deploy", DeployTask::class.java)
         project.tasks.create("exec", ExecTask::class.java)
