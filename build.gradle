@@ -1,0 +1,52 @@
+/*
+ * Author: Antoine Pigeard
+ * Deploy builds on pterodactyl easily with this gradle plugin
+ */
+
+plugins {
+
+    id 'java-gradle-plugin'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.10'
+
+}
+
+group = 'fr.antod3v.plugins'
+version = '1.0'
+
+repositories {
+
+    mavenCentral()
+
+    maven {
+        url = 'https://repo.mattmalec.com/repository/releases'
+    }
+
+}
+
+dependencies {
+
+    implementation gradleApi()
+
+    implementation 'com.mattmalec:Pterodactyl4J:2.BETA_140'
+
+}
+
+
+gradlePlugin {
+
+    plugins {
+
+        pterodactyl {
+
+            id = 'pterodactyl-ci-plugin'
+            implementationClass = 'fr.antod3v.plugins.pterodactyl.Pterodactyl'
+
+        }
+
+    }
+
+}
+
+kotlin {
+    jvmToolchain(8)
+}
