@@ -9,7 +9,7 @@ open class ExecTask : AbstractTask() {
 
     @Input
     @Option(option = "commands", description = "Commands to execute")
-    private var commands: List<String> = ArrayList()
+    var commands: List<String> = ArrayList()
 
     @TaskAction
     fun exec() {

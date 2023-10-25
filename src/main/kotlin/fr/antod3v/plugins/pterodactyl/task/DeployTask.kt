@@ -10,19 +10,19 @@ open class DeployTask : AbstractTask() {
 
     @Input
     @Option(option = "buildPath", description = "Path to the Minecraft server build")
-    private var buildPath: String? = null
+    var buildPath: String? = null
 
     @Input
     @Option(option = "targetDir", description = "Directory to the pterodactyl server")
-    private var targetDir = "plugins"
+    var targetDir = "plugins"
 
     @Input
     @Option(option = "targetName", description = "Remote name of the build")
-    private var targetName: String? = null
+    var targetName: String? = null
 
     @Input
     @Option(option = "command", description = "Command to reload")
-    private var command: String? = null
+    var command: String? = null
 
     @TaskAction
     fun deploy() {
