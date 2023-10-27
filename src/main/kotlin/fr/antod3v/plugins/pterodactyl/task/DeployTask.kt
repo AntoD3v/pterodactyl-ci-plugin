@@ -12,7 +12,7 @@ abstract class DeployTask : AbstractTask() {
 
     @get:Input
     @get:Option(option = "buildPath", description = "Path to the Minecraft server build")
-    abstract val buildPath: String
+    abstract val buildPath: Property<String>
 
     @get:Input
     @get:Optional
@@ -43,7 +43,7 @@ abstract class DeployTask : AbstractTask() {
             ); return
         }
 
-        val fileBuild = this.buildPath.let { File(it).takeIf { file: File -> file.exists() } }
+        val fileBuild = this.buildPath.get().let { File(it).takeIf { file: File -> file.exists() } }
             ?: run { println("buildPath field is missing."); return }
 
         server.fileManager
