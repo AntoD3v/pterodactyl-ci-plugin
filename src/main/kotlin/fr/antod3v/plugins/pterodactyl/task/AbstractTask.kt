@@ -2,38 +2,32 @@ package fr.antod3v.plugins.pterodactyl.task
 
 import com.mattmalec.pterodactyl4j.PteroBuilder
 import com.mattmalec.pterodactyl4j.client.entities.ClientServer
-import fr.antod3v.plugins.pterodactyl.extension.Credential
 import org.gradle.api.DefaultTask
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.options.Option
 
 abstract class AbstractTask : DefaultTask() {
 
-    private val extension: Credential = project.extensions.create("pterodactyl", Credential::class.java)
+    @get:Input
+    @get:Option(option = "serverId", description = "Id of the server (8 first characters of uuid)")
+    abstract val serverId: Property<String>
 
-    @Input
-    @Optional
-    @Option(option = "serverId", description = "Id of the server (8 first characters of uuid)")
-    var serverId: String? = extension.serverId
+    @get:Input
+    @get:Option(option = "apiUrl", description = "Url of the pterodactyl api")
+    abstract val apiUrl: Property<String>
 
-    @Input
-    @Optional
-    @Option(option = "apiUrl", description = "Url of the pterodactyl api")
-    var apiUrl: String? = extension.apiUrl
-
-    @Input
-    @Optional
-    @Option(option = "apiKey", description = "Key of the pterodactyl api")
-    var apiKey: String? = extension.apiKey
+    @get:Input
+    @get:Option(option = "apiKey", description = "Key of the pterodactyl api")
+    abstract val apiKey: Property<String>
 
     init {
         group = "pterodactyl"
     }
 
     protected fun createClient(): ClientServer = PteroBuilder
-        .createClient(apiUrl, apiKey)
-        .retrieveServerByIdentifier(serverId)
+        .createClient(apiUrl.get(), apiKey.get())
+        .retrieveServerByIdentifier(serverId.get())
         .execute()
 
 }

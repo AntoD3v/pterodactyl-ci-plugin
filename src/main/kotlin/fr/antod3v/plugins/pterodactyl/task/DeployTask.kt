@@ -1,5 +1,6 @@
 package fr.antod3v.plugins.pterodactyl.task
 
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
@@ -7,25 +8,27 @@ import org.gradle.api.tasks.options.Option
 import java.io.File
 import kotlin.jvm.optionals.getOrNull
 
-open class DeployTask : AbstractTask() {
+abstract class DeployTask : AbstractTask() {
 
-    @Input
-    @Option(option = "buildPath", description = "Path to the Minecraft server build")
-    var buildPath: String? = null
+    @get:Input
+    @get:Option(option = "buildPath", description = "Path to the Minecraft server build")
+    abstract val buildPath: String
 
-    @Input
-    @Optional
-    @Option(option = "targetDir", description = "Directory to the pterodactyl server")
-    var targetDir: String? = "plugins"
+    @get:Input
+    @get:Optional
+    @get:Option(option = "commands", description = "Commands to reload")
+    val commands: Property<List<String>>? = null;
 
-    @Input
-    @Optional
-    @Option(option = "targetName", description = "Remote name of the build")
-    var targetName: String? = null
+    @get:Input
+    @get:Optional
+    @get:Option(option = "targetDir", description = "Directory to the pterodactyl server")
+    val targetDir: String = "plugins"
 
-    @Input
-    @Option(option = "command", description = "Command to reload")
-    var command: String? = null
+    @get:Input
+    @get:Optional
+    @get:Option(option = "targetName", description = "Remote name of the build (if null, use the local name)")
+    val targetName: String? = null
+
 
     @TaskAction
     fun deploy() {
@@ -40,7 +43,7 @@ open class DeployTask : AbstractTask() {
             ); return
         }
 
-        val fileBuild = this.buildPath?.let { File(it).takeIf { file: File -> file.exists() } }
+        val fileBuild = this.buildPath.let { File(it).takeIf { file: File -> file.exists() } }
             ?: run { println("buildPath field is missing."); return }
 
         server.fileManager
@@ -48,10 +51,12 @@ open class DeployTask : AbstractTask() {
             .addFile(fileBuild, targetName ?: fileBuild.getName())
             .execute()
 
-        server.sendCommand(command).execute()
+        commands?.get()?.forEach { command: String? -> server.sendCommand(command).execute() }
 
         println("Done !")
 
     }
+
+
 
 }

@@ -10,10 +10,23 @@ class Pterodactyl : Plugin<Project> {
 
     override fun apply(project: Project) {
 
-//        project.extensions.create("pterodactyl", Credential::class.java)
+        val credential = project.extensions.create("pterodactyl", Credential::class.java, project)
 
-        project.tasks.create("deploy", DeployTask::class.java)
-        project.tasks.create("exec", ExecTask::class.java)
+        project.tasks.create("deploy", DeployTask::class.java) {
+
+            it.apiUrl.set(credential.apiUrl)
+            it.apiKey.set(credential.apiKey)
+            it.serverId.set(credential.apiKey)
+
+        }
+
+        project.tasks.create("exec", ExecTask::class.java) {
+
+            it.apiUrl.set(credential.apiUrl)
+            it.apiKey.set(credential.apiKey)
+            it.serverId.set(credential.apiKey)
+
+        }
 
     }
 
