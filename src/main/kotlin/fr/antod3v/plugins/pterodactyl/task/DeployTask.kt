@@ -22,12 +22,12 @@ abstract class DeployTask : AbstractTask() {
     @get:Input
     @get:Optional
     @get:Option(option = "targetDir", description = "Directory to the pterodactyl server")
-    val targetDir: String = "plugins"
+    val targetDir: Property<String> = project.objects.property(String::class.java).convention("plugins")
 
     @get:Input
     @get:Optional
     @get:Option(option = "targetName", description = "Remote name of the build (if null, use the local name)")
-    val targetName: String? = null
+    val targetName: Property<String>? = null
 
 
     @TaskAction
@@ -37,7 +37,7 @@ abstract class DeployTask : AbstractTask() {
 
         val server = createClient()
 
-        val directory = server.retrieveDirectory().execute().getDirectoryByName(targetDir).getOrNull() ?: run {
+        val directory = server.retrieveDirectory().execute().getDirectoryByName(targetDir.get()).getOrNull() ?: run {
             println(
                 "Plugins directory ($targetDir) not found."
             ); return
@@ -48,7 +48,7 @@ abstract class DeployTask : AbstractTask() {
 
         server.fileManager
             .upload(directory)
-            .addFile(fileBuild, targetName ?: fileBuild.getName())
+            .addFile(fileBuild, targetName?.get() ?: fileBuild.getName())
             .execute()
 
         commands?.get()?.forEach { command: String? -> server.sendCommand(command).execute() }
