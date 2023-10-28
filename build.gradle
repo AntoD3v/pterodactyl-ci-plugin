@@ -5,8 +5,10 @@
 
 plugins {
 
+    id 'java'
+    id 'maven-publish'
     id 'java-gradle-plugin'
-    id 'org.jetbrains.kotlin.jvm' version '1.8.10'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 
 }
 
@@ -29,6 +31,10 @@ dependencies {
 
     implementation 'com.mattmalec:Pterodactyl4J:2.BETA_140'
 
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
 }
 
 
@@ -39,7 +45,7 @@ gradlePlugin {
         pterodactyl {
 
             id = 'pterodactyl-ci-plugin'
-            implementationClass = 'fr.antod3v.plugins.pterodactyl.Pterodactyl'
+            implementationClass = 'fr.antod3v.plugins.pterodactyl.Plugin'
 
         }
 
@@ -47,6 +53,26 @@ gradlePlugin {
 
 }
 
-kotlin {
-    jvmToolchain(8)
+compileJava.options.encoding = 'UTF-8'
+
+shadowJar {
+
+    archiveClassifier = ''
+
+}
+
+publishing {
+    repositories {
+        mavenLocal()
+    }
+    publications {
+        shadow(MavenPublication) { publication ->
+            from project.shadow.component(publication)
+        }
+    }
+}
+
+compileJava {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
 }
