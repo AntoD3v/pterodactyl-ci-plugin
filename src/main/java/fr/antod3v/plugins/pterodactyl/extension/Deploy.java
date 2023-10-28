@@ -14,6 +14,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Deploy represents the deployment process for a project.
+ * It provides methods for getting the local build output file, the remote file name,
+ * the list of deployment commands, and executing a specific plugman command.
+ */
 @Getter
 @Setter
 public class Deploy {
@@ -25,10 +30,20 @@ public class Deploy {
 
     private List<String> commands = null;
 
+    /**
+     * Initializes a new instance of the Deploy class with the specified project.
+     *
+     * @param project The project to be deployed.
+     */
     public Deploy(Project project) {
         this.project = project;
     }
 
+    /**
+     * Retrieves the local build output file.
+     *
+     * @return the local build output file
+     */
     public File getLocalBuildOuput() {
 
         if (this.localBuildOuput == null) {
@@ -61,6 +76,11 @@ public class Deploy {
 
     }
 
+    /**
+     * Retrieves the name of the remote file.
+     *
+     * @return the name of the remote file
+     */
     public String getRemoteFileName() {
 
         return this.remoteFileName == null
@@ -69,18 +89,34 @@ public class Deploy {
 
     }
 
+    /**
+     * Retrieves the list of commands to execute.
+     *
+     * @return the list of commands to execute
+     */
     public List<String> getCommands() {
 
         return this.commands == null ? Arrays.asList(usePlugmanCommand(), "broadcast &fDeploiement de &e"+getPluginName()+" &f: &a✔ réussi") : this.commands;
 
     }
 
+    /**
+     * Retrieves the Plugman command to reload the plugin.
+     *
+     * @return the Plugman command to reload the plugin
+     */
     public String usePlugmanCommand() {
 
         return "plugman reload " + getPluginName();
 
     }
 
+    /**
+     * Retrieves the name of the plugin from the plugin.yml file.
+     *
+     * @return the name of the plugin
+     * @throws IllegalStateException if the plugin.yml file is not found or does not have a name field
+     */
     @SneakyThrows
     public String getPluginName() {
 

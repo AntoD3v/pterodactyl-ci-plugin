@@ -8,10 +8,18 @@ import fr.antod3v.plugins.pterodactyl.extension.Deploy;
 import fr.antod3v.plugins.pterodactyl.extension.Pterodactyl;
 import org.gradle.api.Project;
 
-import java.io.File;
-
+/**
+ * The Plugin class is responsible for applying the Pterodactyl configuration to a Gradle project.
+ * It implements the org.gradle.api.Plugin interface.
+ * This class provides the "deploy" task for uploading files and executing commands on a Pterodactyl server.
+ */
 public class Plugin implements org.gradle.api.Plugin<Project> {
 
+    /**
+     * Apply the Pterodactyl configuration to the given project.
+     *
+     * @param target The project to apply the Pterodactyl configuration to.
+     */
     @Override
     public void apply(Project target) {
 
@@ -49,6 +57,12 @@ public class Plugin implements org.gradle.api.Plugin<Project> {
 
     }
 
+    /**
+     * Creates a Pterodactyl client server using the provided credentials.
+     *
+     * @param credential The credential object containing the API URL, API key, and server identifier.
+     * @return The created Pterodactyl client server.
+     */
     protected ClientServer createClient(Credential credential) {
 
         return PteroBuilder.createClient(credential.getApiUrl(), credential.getApiKey())

@@ -9,6 +9,7 @@ plugins {
     id 'maven-publish'
     id 'java-gradle-plugin'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.gradle.plugin-publish' version '1.1.0'
 
 }
 
@@ -40,12 +41,19 @@ dependencies {
 
 gradlePlugin {
 
+    vcsUrl = "https://github.com/AntoD3v/pterodactyl-ci-plugin"
+    website = "https://github.com/AntoD3v/pterodactyl-ci-plugin"
+
     plugins {
 
         pterodactyl {
 
-            id = 'pterodactyl-ci-plugin'
+            id = 'fr.antod3v.pterodactyl-ci-plugin'
+            displayName = 'Pterodactyl CI Plugin'
+            description = 'Deploy builds on pterodactyl easily with this gradle plugin'
             implementationClass = 'fr.antod3v.plugins.pterodactyl.Plugin'
+            tags.addAll("deployment", "deploy", "minecraft", "pterodactyl", "ci", "server")
+
 
         }
 
