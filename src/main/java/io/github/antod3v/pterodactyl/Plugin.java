@@ -1,11 +1,11 @@
-package fr.antod3v.plugins.pterodactyl;
+package io.github.antod3v.pterodactyl;
 
 import com.mattmalec.pterodactyl4j.PteroBuilder;
 import com.mattmalec.pterodactyl4j.client.entities.ClientServer;
 import com.mattmalec.pterodactyl4j.client.entities.Directory;
-import fr.antod3v.plugins.pterodactyl.extension.Credential;
-import fr.antod3v.plugins.pterodactyl.extension.Deploy;
-import fr.antod3v.plugins.pterodactyl.extension.Pterodactyl;
+import io.github.antod3v.pterodactyl.extension.Credential;
+import io.github.antod3v.pterodactyl.extension.Deploy;
+import io.github.antod3v.pterodactyl.extension.Pterodactyl;
 import org.gradle.api.Project;
 
 /**

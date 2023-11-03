@@ -1,4 +1,4 @@
-package fr.antod3v.plugins.pterodactyl.extension;
+package io.github.antod3v.pterodactyl.extension;
 
 import lombok.Getter;
 import org.gradle.api.Action;

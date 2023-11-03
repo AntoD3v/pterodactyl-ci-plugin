@@ -13,8 +13,8 @@ plugins {
 
 }
 
-group = 'fr.antod3v.plugins'
-version = '1.0'
+group = 'io.github.antod3v'
+version = '1.1'
 
 repositories {
 
@@ -48,10 +48,10 @@ gradlePlugin {
 
         pterodactyl {
 
-            id = 'fr.antod3v.pterodactyl-ci-plugin'
+            id = 'io.github.AntoD3v.pterodactyl-ci-plugin'
             displayName = 'Pterodactyl CI Plugin'
             description = 'Deploy builds on pterodactyl easily with this gradle plugin'
-            implementationClass = 'fr.antod3v.plugins.pterodactyl.Plugin'
+            implementationClass = 'io.github.antod3v.pterodactyl.Plugin'
             tags.addAll("deployment", "deploy", "minecraft", "pterodactyl", "ci", "server")
 
 

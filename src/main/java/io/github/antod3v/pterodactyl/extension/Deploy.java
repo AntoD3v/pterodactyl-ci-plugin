@@ -1,4 +1,4 @@
-package fr.antod3v.plugins.pterodactyl.extension;
+package io.github.antod3v.pterodactyl.extension;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -57,13 +57,13 @@ public class Deploy {
             }
 
             File current = files[0];
-            long size = current.getTotalSpace();
+            long size = current.length();
 
             for (File file : files) {
 
-                if (file.getTotalSpace() > size) {
+                if (file.length() > size) {
                     current = file;
-                    size = file.getTotalSpace();
+                    size = file.length();
                 }
 
             }
