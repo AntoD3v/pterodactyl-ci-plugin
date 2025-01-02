@@ -38,6 +38,15 @@ public class Plugin implements org.gradle.api.Plugin<Project> {
                 Credential credential = pterodactyl.getCredential();
                 Deploy deploy = pterodactyl.getDeploy();
 
+                File fileToUpload;
+
+                try {
+                    fileToUpload = deploy.getLocalBuildOutput();
+                } catch (RuntimeException exception) {
+                    target.getLogger().error("We found a exception for try to get the file to upload", exception);
+                    return;
+                }
+
                 ClientServer server;
 
                 try {
@@ -58,15 +67,6 @@ public class Plugin implements org.gradle.api.Plugin<Project> {
                     directory = server.retrieveDirectory(remoteDir).execute();
                 } catch (ServerException exception) {
                     target.getLogger().error("We found a exception when try to retrive the remoteDir '{}'", remoteDir, exception);
-                    return;
-                }
-
-                File fileToUpload;
-
-                try {
-                    fileToUpload = deploy.getLocalBuildOutput();
-                } catch (RuntimeException exception) {
-                    target.getLogger().error("We found a exception for try to get the file to upload", exception);
                     return;
                 }
 
