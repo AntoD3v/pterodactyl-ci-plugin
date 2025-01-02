@@ -9,9 +9,7 @@ This is a simple gradle plugin to help you build and deploy your minecraft serve
 ```groovy
 
 plugins {
-
-    id 'io.github.AntoD3v.pterodactyl-ci-plugin' version '1.2'
-
+    id 'io.github.AntoD3v.pterodactyl-ci-plugin' version '1.3'
 }
 
 ```
