@@ -10,7 +10,7 @@ This is a simple gradle plugin to help you build and deploy your minecraft serve
 
 plugins {
 
-    id 'io.github.AntoD3v.pterodactyl-ci-plugin' version '1.1'
+    id 'io.github.AntoD3v.pterodactyl-ci-plugin' version '1.2'
 
 }
 
@@ -34,7 +34,7 @@ pterodactyl {
     // This part is optional. (Value are auto-computed)
     deploy {
         localBuildOuput = "build/libs/your-plugin.jar" // default: search the most heavy jar in build/libs
-        remoteDir = "plugins" // default: plugins
+        remoteDir = "/plugins" // default: /plugins
         remoteFileName = "my-plugin.jar" // default: project.name-project.version.jar
         commands = ["say Hello World!"] // default: plugman command + broadcast
     }
