@@ -58,8 +58,23 @@ Then, you can get this with `project.property("pterodactylApiKey")` in your buil
 
 ### 4. Create & Run the task
 
+How it works is simple: you build, then deploy
+
 ```bash
-./gradlew deploy
+# Example with native build
+./gradlew build deploy
+
+# Example with shadowJar 
+./gradlew shadowJar deploy
+
 ```
 
-**Tips**: You can build and deploy in one command `./gradlew jar deploy`
+#### Another way
+If you want, you could add : 
+```bash
+tasks.deploy {
+    dependsOn("shadowJar")
+}
+```
+
+The result is you could deploy `./gradlew deploy` (build then, deploy)
