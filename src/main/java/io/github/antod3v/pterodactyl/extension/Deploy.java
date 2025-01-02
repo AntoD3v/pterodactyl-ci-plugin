@@ -25,7 +25,7 @@ public class Deploy {
 
     private final Project project;
     private String localBuildOuput = null;
-    private String remoteDir = "plugins";
+    private String remoteDir = "/plugins";
     private String remoteFileName = null;
 
     private List<String> commands = null;

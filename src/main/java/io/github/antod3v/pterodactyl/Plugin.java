@@ -36,10 +36,10 @@ public class Plugin implements org.gradle.api.Plugin<Project> {
 
                 ClientServer server = createClient(credential);
 
-                Directory directory = server.retrieveDirectory().execute().getDirectoryByName(deploy.getRemoteDir()).orElse(null);
+                Directory directory = server.retrieveDirectory(deploy.getRemoteDir()).execute();
 
                 if (directory == null) {
-                    System.out.println("Plugins directory (" + deploy.getRemoteDir() + ") not found.");
+                    System.out.println("Remote Directory (" + deploy.getRemoteDir() + ") not found.");
                     return;
                 }
 
@@ -50,7 +50,7 @@ public class Plugin implements org.gradle.api.Plugin<Project> {
 
                 deploy.getCommands().forEach(command -> server.sendCommand(command).execute());
 
-                System.out.println("Plugin deployed !");
+                System.out.println("Plugin File (" + deploy.getRemoteFileName() + ") deployed!");
             });
 
         });
