@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.gradle.api.Project;
-import org.gradle.internal.impldep.org.testng.collections.Lists;
 
-import javax.annotation.RegEx;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Arrays;
@@ -24,7 +22,7 @@ import java.util.regex.Pattern;
 public class Deploy {
 
     private final Project project;
-    private String localBuildOuput = null;
+    private String localBuildOutput = null;
     private String remoteDir = "/plugins";
     private String remoteFileName = null;
 
@@ -44,16 +42,15 @@ public class Deploy {
      *
      * @return the local build output file
      */
-    public File getLocalBuildOuput() {
+    public File getLocalBuildOutput() {
 
-        if (this.localBuildOuput == null) {
+        if (this.localBuildOutput == null) {
 
             File dir = new File(project.getProjectDir(), "build/libs");
             File[] files = dir.listFiles();
 
-            if (files.length == 0) {
-                System.out.println("No file found in build/libs");
-                return null;
+            if (files == null || files.length == 0) {
+                throw new RuntimeException("No file found in " + dir.getAbsolutePath());
             }
 
             File current = files[0];
@@ -72,7 +69,7 @@ public class Deploy {
 
         }
 
-        return new File(this.project.getProjectDir(), this.localBuildOuput);
+        return new File(this.project.getProjectDir(), this.localBuildOutput);
 
     }
 

@@ -3,9 +3,13 @@ package io.github.antod3v.pterodactyl;
 import com.mattmalec.pterodactyl4j.PteroBuilder;
 import com.mattmalec.pterodactyl4j.client.entities.ClientServer;
 import com.mattmalec.pterodactyl4j.client.entities.Directory;
+import com.mattmalec.pterodactyl4j.exceptions.FileUploadException;
+import com.mattmalec.pterodactyl4j.exceptions.PteroException;
+import com.mattmalec.pterodactyl4j.exceptions.ServerException;
 import io.github.antod3v.pterodactyl.extension.Credential;
 import io.github.antod3v.pterodactyl.extension.Deploy;
 import io.github.antod3v.pterodactyl.extension.Pterodactyl;
+import java.io.File;
 import org.gradle.api.Project;
 
 /**
@@ -34,23 +38,62 @@ public class Plugin implements org.gradle.api.Plugin<Project> {
                 Credential credential = pterodactyl.getCredential();
                 Deploy deploy = pterodactyl.getDeploy();
 
-                ClientServer server = createClient(credential);
+                File fileToUpload;
 
-                Directory directory = server.retrieveDirectory(deploy.getRemoteDir()).execute();
-
-                if (directory == null) {
-                    System.out.println("Remote Directory (" + deploy.getRemoteDir() + ") not found.");
+                try {
+                    fileToUpload = deploy.getLocalBuildOutput();
+                } catch (RuntimeException exception) {
+                    target.getLogger().error("We found a exception for try to get the file to upload", exception);
                     return;
                 }
 
-                server.getFileManager()
-                        .upload(directory)
-                        .addFile(deploy.getLocalBuildOuput(), deploy.getRemoteFileName())
-                        .execute();
+                if (!fileToUpload.exists()) {
+                    target.getLogger().error("The file to upload '{}' not exists", fileToUpload.getAbsolutePath());
+                    return;
+                }
 
-                deploy.getCommands().forEach(command -> server.sendCommand(command).execute());
+                ClientServer server;
 
-                System.out.println("Plugin File (" + deploy.getRemoteFileName() + ") deployed!");
+                try {
+                    server = createClient(credential);
+                } catch (PteroException exception) {
+                    target.getLogger().error("We found a exception when try connect to your panel '{}'", credential.getApiUrl(), exception);
+                    return;
+                }
+
+                String remoteDir = deploy.getRemoteDir();
+                if (remoteDir.isEmpty() || !remoteDir.startsWith("/")) {
+                    remoteDir = "/" + remoteDir;
+                }
+
+                Directory directory;
+
+                try {
+                    directory = server.retrieveDirectory(remoteDir).execute();
+                } catch (ServerException exception) {
+                    target.getLogger().error("We found a exception when try to retrive the remoteDir '{}'", remoteDir, exception);
+                    return;
+                }
+
+                try {
+                    server.getFileManager()
+                            .upload(directory)
+                            .addFile(fileToUpload, deploy.getRemoteFileName())
+                            .execute();
+                } catch (FileUploadException exception) {
+                    target.getLogger().error("We found a exception for try to upload the file '{}' to '{}'", fileToUpload, remoteDir, exception);
+                    return;
+                }
+
+                for (String command : deploy.getCommands()) {
+                    try {
+                        server.sendCommand(command).execute();
+                    } catch (PteroException exception) {
+                        target.getLogger().error("We found a exception when try to run '{}' in the server", command, exception);
+                    }
+                }
+
+                target.getLogger().info("Plugin File ({}) deployed!", deploy.getRemoteFileName());
             });
 
         });

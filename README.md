@@ -33,7 +33,7 @@ pterodactyl {
     
     // This part is optional. (Value are auto-computed)
     deploy {
-        localBuildOuput = "build/libs/your-plugin.jar" // default: search the most heavy jar in build/libs
+        localBuildOutput = "build/libs/your-plugin.jar" // default: search the most heavy jar in build/libs
         remoteDir = "/plugins" // default: /plugins
         remoteFileName = "my-plugin.jar" // default: project.name-project.version.jar
         commands = ["say Hello World!"] // default: plugman command + broadcast
