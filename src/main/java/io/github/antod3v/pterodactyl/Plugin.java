@@ -3,9 +3,11 @@ package io.github.antod3v.pterodactyl;
 import com.mattmalec.pterodactyl4j.PteroBuilder;
 import com.mattmalec.pterodactyl4j.client.entities.ClientServer;
 import com.mattmalec.pterodactyl4j.client.entities.Directory;
+import com.mattmalec.pterodactyl4j.exceptions.ServerException;
 import io.github.antod3v.pterodactyl.extension.Credential;
 import io.github.antod3v.pterodactyl.extension.Deploy;
 import io.github.antod3v.pterodactyl.extension.Pterodactyl;
+import java.io.File;
 import org.gradle.api.Project;
 
 /**
@@ -34,23 +36,52 @@ public class Plugin implements org.gradle.api.Plugin<Project> {
                 Credential credential = pterodactyl.getCredential();
                 Deploy deploy = pterodactyl.getDeploy();
 
-                ClientServer server = createClient(credential);
+                ClientServer server;
 
-                Directory directory = server.retrieveDirectory(deploy.getRemoteDir()).execute();
+                try {
+                    server = createClient(credential);
+                } catch (ServerException exception) {
+                    target.getLogger().error("We found a exception when try connect to your panel", exception);
+                    return;
+                }
 
-                if (directory == null) {
-                    System.out.println("Remote Directory (" + deploy.getRemoteDir() + ") not found.");
+                String remoteDir = deploy.getRemoteDir();
+                if (remoteDir.isEmpty() || !remoteDir.startsWith("/")) {
+                    remoteDir = "/" + remoteDir;
+                }
+
+                Directory directory;
+
+                try {
+                    directory = server.retrieveDirectory(remoteDir).execute();
+                } catch (ServerException exception) {
+                    target.getLogger().error("We found a exception when try to retrive the remoteDir '{}'", remoteDir, exception);
+                    return;
+                }
+
+                File fileToUpload;
+
+                try {
+                    fileToUpload = deploy.getLocalBuildOutput();
+                } catch (ServerException exception) {
+                    target.getLogger().error("We found a exception for try to get the file to upload", exception);
                     return;
                 }
 
                 server.getFileManager()
                         .upload(directory)
-                        .addFile(deploy.getLocalBuildOuput(), deploy.getRemoteFileName())
+                        .addFile(fileToUpload, deploy.getRemoteFileName())
                         .execute();
 
-                deploy.getCommands().forEach(command -> server.sendCommand(command).execute());
+                for (String command : deploy.getCommands()) {
+                    try {
+                        server.sendCommand(command).execute();
+                    } catch (ServerException exception) {
+                        target.getLogger().error("We found a exception when try to run '{}' in the server", command, exception);
+                    }
+                }
 
-                System.out.println("Plugin File (" + deploy.getRemoteFileName() + ") deployed!");
+                target.getLogger().info("Plugin File ({}) deployed!", deploy.getRemoteFileName());
             });
 
         });
