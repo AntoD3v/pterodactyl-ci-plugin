@@ -47,6 +47,11 @@ public class Plugin implements org.gradle.api.Plugin<Project> {
                     return;
                 }
 
+                if (!fileToUpload.exists()) {
+                    target.getLogger().error("The file to upload '{}' not exists", fileToUpload.getAbsolutePath());
+                    return;
+                }
+
                 ClientServer server;
 
                 try {
