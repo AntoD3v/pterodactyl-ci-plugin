@@ -3,6 +3,8 @@ package io.github.antod3v.pterodactyl;
 import com.mattmalec.pterodactyl4j.PteroBuilder;
 import com.mattmalec.pterodactyl4j.client.entities.ClientServer;
 import com.mattmalec.pterodactyl4j.client.entities.Directory;
+import com.mattmalec.pterodactyl4j.exceptions.FileUploadException;
+import com.mattmalec.pterodactyl4j.exceptions.PteroException;
 import com.mattmalec.pterodactyl4j.exceptions.ServerException;
 import io.github.antod3v.pterodactyl.extension.Credential;
 import io.github.antod3v.pterodactyl.extension.Deploy;
@@ -40,8 +42,8 @@ public class Plugin implements org.gradle.api.Plugin<Project> {
 
                 try {
                     server = createClient(credential);
-                } catch (ServerException exception) {
-                    target.getLogger().error("We found a exception when try connect to your panel", exception);
+                } catch (PteroException exception) {
+                    target.getLogger().error("We found a exception when try connect to your panel '{}'", credential.getApiUrl(), exception);
                     return;
                 }
 
@@ -63,20 +65,25 @@ public class Plugin implements org.gradle.api.Plugin<Project> {
 
                 try {
                     fileToUpload = deploy.getLocalBuildOutput();
-                } catch (ServerException exception) {
+                } catch (RuntimeException exception) {
                     target.getLogger().error("We found a exception for try to get the file to upload", exception);
                     return;
                 }
 
-                server.getFileManager()
-                        .upload(directory)
-                        .addFile(fileToUpload, deploy.getRemoteFileName())
-                        .execute();
+                try {
+                    server.getFileManager()
+                            .upload(directory)
+                            .addFile(fileToUpload, deploy.getRemoteFileName())
+                            .execute();
+                } catch (FileUploadException exception) {
+                    target.getLogger().error("We found a exception for try to upload the file '{}' to '{}'", fileToUpload, remoteDir, exception);
+                    return;
+                }
 
                 for (String command : deploy.getCommands()) {
                     try {
                         server.sendCommand(command).execute();
-                    } catch (ServerException exception) {
+                    } catch (PteroException exception) {
                         target.getLogger().error("We found a exception when try to run '{}' in the server", command, exception);
                     }
                 }
