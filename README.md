@@ -140,8 +140,8 @@ Well done, you have successfully created a deployment in pterodactyl
 ## Contributing
 Contributions, issues, and feature requests are welcome! Feel free to open an issue or submit a pull request.
 
-- (Doc94)[https://github.com/Doc94]
-- (AntoD3v)[https://github.com/AntoD3v]
+- [Doc94](https://github.com/Doc94)
+- [AntoD3v](https://github.com/AntoD3v)
 
 ## License
 This project is licensed under the MIT License.
